@@ -879,16 +879,27 @@ determining $\omega$.
 \section{Discussion}\label{Discussion}
 
 The optimization of fuzzy controllers for real-world applications requires a
-broader perspective. We need to treat the problem as a supervised learning
-task. The quality of solutions needs to consider other metrics part of the
-desired control properties. In this work, experiments show that the overall
-result improved by adding a robust validation of candidate solutions. Moreover,
-adding more complexity to the knowledge base also improved the control in terms
-of RMSE, although needing more computational resources. Our literature review
+broader perspective. % Broader than what? - JJ
+We need to treat the problem as a supervised learning
+task. The assessment of the quality of solutions needs to consider other metrics
+as part of the
+desired control properties. % such as ... - JJ
+In this work, experiments show that the overall
+result improved by adding a robust validation of candidate solutions. % as in
+                                % ... - JJ
+Moreover,
+adding more complexity to the knowledge base % Used for training? - JJ
+also improved the control in terms
+of RMSE, although needing more computational resources. % During training? - JJ
+Our literature review
 shows that using only the RMSE is a common practice but could not be enough for
-this type of application.
+this type of application. % Probably redundant. In this section you need to
+                          % discuss why using other metrics helped find a better
+                          % solution - jj
 
-Furthermore, because of the computational cost as future work, we will propose
+% This should be a bit more precise and address the possible
+% shortcomings. Making things in parallel need not make it faster - JJ
+Furthermore, because of the computational cost, we will propose  as future work
 a technique to execute these experiments in a distributed way. Later we could
 try other bio-inspired methods and compare the results. We could also add more
 membership functions and test other functions to improve the inference system.
