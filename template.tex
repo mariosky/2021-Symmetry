@@ -121,14 +121,15 @@ manual selection of these parameters is difficult because the search space is
 of considerable size and requires the validation of establishing the
 controller's performance by running time-consuming simulations.  Evolutionary
 algorithms (EAs) and other metaheuristics are often employed in tuning FISs % Define this. Is it Fuzzy inference systems? - JJ
-\cite{martinez-soto_bio-inspired_2012}. 
+\cite{martinez-soto_bio-inspired_2012, DBLP:conf/evoW/SalemMGG18}.
 
-EAs are a kind of optimization metaheuristic used for solving complex
+EAs are a population-based optimization metaheuristic that can be used, among
+other things, for solving complex
 combinatorial problems \cite{back1993overview} with applications in many
 engineering areas \cite{mateos_algoritmos_2004}.  One of the most common EAs
-are Genetic Algorithms (GAs) \cite{holland1992genetic} which are
-population-based search methods that are inspired in natural selection. In this
-model, surviving individuals reproduce through genetic crossover and mutation
+are Genetic Algorithms (GAs) \cite{holland1992genetic} which use specific
+representation for the problems to solve, as well as some specific operators:
+surviving individuals reproduce through genetic crossover and mutation
 operators to generate offspring, and there is a replacement mechanism to select
 the most adapted offspring \cite{muelas_algoritmos_2009}. GAs work on a set of
 potential solutions called a population that is evolved for a certain number of
