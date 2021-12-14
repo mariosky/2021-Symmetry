@@ -853,13 +853,14 @@ Finally, in Figure~\ref{fig:yaw} we can have a better look at the steering
 motion of each of the controllers concerning the yaw of the ``M'' path. Here we
 can see the advantage of the control law. In this case, the 3MF controller has
 a very high oscillation, which is not desirable in this type of controller. The
-same is observed in the 5MF controller but lesser; this could be related to how
+same is observed in the 5MF controller but to a lesser degree; this could be related to how
 these controllers evolved, giving only weight to $e$.  This is a crucial aspect
-to be considered in future work. We can consider including a damping module or
+to be considered in future work. % You need to insert it in that section - JJ
+We can consider including a damping module or
 an evaluation metric that negatively weights this kind of oscillation. We can
 even include a fuzzy variable to the controller; in comparison, the control law
 also uses the curvature of the path $\mathcal{K}(s)$ as a variable for
-determining $\omega$.
+determining $\omega$. % If this is future work, move it there - JJ
 
 \end{paracol}
 \begin{figure}[h]
