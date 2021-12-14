@@ -89,7 +89,7 @@ $^{2}$ \quad University of Granada; jmerelo@ugr.es}
 
 \section{Introduction}
 
-Proposed by Lotfi Zadeh \cite{goguen_zadeh_1973}, fuzzy logic introduces the
+Proposed by Lofti Zadeh \cite{goguen_zadeh_1973}, fuzzy logic introduces the
 concepts of fuzzy sets and fuzzy logic operators \cite{zadeh1996fuzzy}.
 Contrary to boolean logic, in which an element is a member of a set or is not,
 now elements have a degree of membership to many sets. Fuzzy logic uses
@@ -197,7 +197,7 @@ restriction $a < m <b$. In this work, we propose a method to include further
 restrictions, including symmetric definition and limiting the range of values
 of each parameter. In our previous work, we compared symmetrical and
 asymmetrical definitions and found that symmetrical restrictions give better
-results for rear-weel-based controllers. 
+results for rear-wheel-based controllers. 
 
 The main contribution of this work is to propose, through the use of a
 population-based metaheuristic, an optimization method to solve the problem of
@@ -208,7 +208,7 @@ are linguistically familiar to human users.
 Therefore, following the preliminary work in
 \cite{mancilla2022tracking,Mancilla2021}, in this paper, we propose the
 addition of a more granular definition of fuzzy variables by including two more
-membership functions. Also, we propose a new parameterization technique that
+membership functions. Also, we propose a new parametrization technique that
 enables the definition of symmetric MFs, by using an aperture factor instead of
 the previous method that used a delta from a fixed point.  These additions
 greatly improve the controller's evolutionary design by significantly
@@ -216,7 +216,7 @@ decreasing the tracking error (RMSE) compared to our previous work. We also
 propose a new evaluation method for establishing the fitness of candidate
 solutions by using three different trajectories in each simulation.
 Experimental results show that this method reduces the risk of generating an
-overtrained controller with low error for a specific track but cannot function
+over-trained controller with low error for a specific track but cannot function
 in other paths. To demonstrate the application of the method, we report an
 experimental case study using a bicycle-like mobile robot with nonholonomic
 constraints. 
@@ -309,7 +309,7 @@ d(t) = (x_r(t),y_r(t))-(x_{ref}(s(t)),y_{ref}(s(t)))
 \end{equation}
 
 The heading error is based on a unit vector $\hat{t}$ (shown in green on Figure
-\ref{fig:kinematics}) tanget to the path at $s(t)$ given by 
+\ref{fig:kinematics}) tangent to the path at $s(t)$ given by 
 
 \begin{equation}
 \hat{t} = \frac{ \left(\left.\frac{\partial x_{ref}}{\partial s} \right|_{s(t)},\left.\frac{\partial y_{ref}}{\partial s} \right|_{s(t)}\right)} 
@@ -451,7 +451,7 @@ simulations. The rules are presented in Table~\ref{tab:5mfRules}.
     \label{sec:GA}
 
 As we mentioned earlier, the proposed fuzzy controllers we proposed in the
-previous Section~\ref{sub:FuzzyControllers} need to be tunned to give
+previous Section~\ref{sub:FuzzyControllers} need to be tuned to give
 acceptable results on a simulation. In this section, we describe our proposed
 method for MFs parameter optimization. First, we need to establish which
 parameters we are going to keep fixed and which parameters we are going to
@@ -558,10 +558,10 @@ functions.  These values are shown in Table~\ref{tab:factor}.
 
 \begin{specialtable}[H] 
 \small
-\caption{Ranges defined for each pararamter for the 5MF controller.}\label{tab:factor}
+\caption{Ranges defined for each parameter for the 5MF controller.}\label{tab:factor}
 \begin{tabular}{clcl}
 \toprule
-\textbf{Paramerer}	& \textbf{Range}& \textbf{Parameter} & \textbf{Range}\\
+\textbf{Parameter}	& \textbf{Range}& \textbf{Parameter} & \textbf{Range}\\
 \midrule
 a & [0,1]			& f & [0, 1]\\
 b & [0.5,2]			& g & [0.5, 2]\\
@@ -572,7 +572,7 @@ e & [0,1]			& j & [0, 1]\\
 \end{tabular}
 \end{specialtable}
 
-\subsubsection{Genetic Algorthm Optimization}\label{sec:GAO}
+\subsubsection{Genetic Algorithm Optimization}\label{sec:GAO}
 
 As a population-based metaheuristic, the GA needs to evaluate the fitness of
 each candidate solution (also called individuals) in its population. This
@@ -601,7 +601,7 @@ population.
 
 
 In our previous work \cite{Mancilla2021} we evolved the controllers with a
-single path; we noticed that this could lead to overtraining. Similar to what
+single path; we noticed that this could lead to over-training. Similar to what
 happens in supervised learning algorithms, the controller found by the GA could
 be specialized only to the track used for its evolution. We found that the
 controller with only three MFs could follow new unseen tracks, but this was not
@@ -613,7 +613,7 @@ of the three simulations. We ran experiments with one and three tracks. We
 defined each track using cubic splines over a list of coordinates; this is a
 common approach in the literature \cite{zhang2013cubic}. The tracks and the
 parameters to define them are shown in Table~\ref{tab:routes}. The first track
-was used on prevous work and was taken from the library of
+was used on previous work and was taken from the library of
 \cite{sakai_pythonrobotics_2018}, this track starts with a very narrow curve to
 the left that is difficult for controllers to follow, but it remains
 differentiable throughout the path, we call this track ``M''. The other tracks
@@ -656,10 +656,10 @@ Section~\ref{sub:FuzzyControllers}.  After several preliminary experiments, we
 settled for a configuration with a population size of 50 with 20 generations.
 We used single-point crossover with $0.3$ probability.  We opted for tournament
 selection with a tournament size of three. For mutation, and because we are
-using continuous values, we selected a gaussian mutation with $\mu=0.0$ and
+using continuous values, we selected a Gaussian mutation with $\mu=0.0$ and
 $\sigma=0.2$. Finally, the probability for each gene to be mutated was $0.2$.
 Each individual's fitness was the RMSE mentioned earlier, but to economize the
-computational resources, while the imulations were running, we interrupted
+computational resources, while the simulations were running, we interrupted
 those simulations where the robot was clearly out of the track or did not
 finish near the final point of the track. In these cases, we assigned a very
 low fitness (we want to minimize the error) of 5000 to the first case and 2000
@@ -681,7 +681,7 @@ against are summarized in Table~\ref{tab:sim_params}.
 \caption{Simulation and controller parameters.}\label{tab:sim_params}
 \begin{tabular}{ll}
 \toprule
-\textbf{Paramerer}	& \textbf{Value}\\
+\textbf{Parameter}	& \textbf{Value}\\
 \midrule
 Wheel-base & $l=2.5$		\\
 Steering limit & $|\delta|\le \frac{\pi}{4}$	\\
@@ -865,11 +865,11 @@ determining $\omega$.
 \begin{figure}[h]
     \widefigure
      \centering
-    \subfigure[Yaw along the refernce path $s(\gamma)$ in meters.]{\label{fig:yawR}\includegraphics[width=90mm]{img/yawR.pdf}}
-    \subfigure[Yaw of the control law as it was tracking the refernce path, in seconds.]{\label{fig:yawL}\includegraphics[width=90mm]{img/yawL.pdf}}
+    \subfigure[Yaw along the reference path $s(\gamma)$ in meters.]{\label{fig:yawR}\includegraphics[width=90mm]{img/yawR.pdf}}
+    \subfigure[Yaw of the control law as it was tracking the reference path, in seconds.]{\label{fig:yawL}\includegraphics[width=90mm]{img/yawL.pdf}}
     \subfigure[Yaw of the 3MF controller. ]{\label{fig:yaw3}\includegraphics[width=90mm]{img/yaw3.pdf}}
     \subfigure[Yaw of the 5MF controller.]{\label{fig:yaw5}\includegraphics[width=90mm]{img/yaw5.pdf}}
-     \caption{Comparation of the yaw (steering) for each of the controllers as it was tracking the reference path ``M'', in seconds.}
+     \caption{Comparison of the yaw (steering) for each of the controllers as it was tracking the reference path ``M'', in seconds.}
         \label{fig:yaw}
 \end{figure}
 \begin{paracol}{2}
