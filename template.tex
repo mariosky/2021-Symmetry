@@ -64,23 +64,22 @@ $^{2}$ \quad University of Granada; jmerelo@ugr.es}
 
 \conference{INFUS-21} % An extended version of a conference paper
 
-% Abstract (Do not insert blank lines, i.e. \\) 
+% Abstract (Do not insert blank lines, i.e. \\)
 
-\abstract{ In this work, we propose, through the use of a population-based
-    metaheuristic, an optimization method to solve the problem of autonomous
-    path tracking using a rear-wheel controller in the framework of fuzzy
-    logic. This approach enables the design of controllers using rules that are
-    linguistically familiar to human users. Moreover, a new validation
-    technique is presented by using three different paths to validate the
-    performance of each candidate configuration. We extend on our previous work
-    by adding two more membership functions to the previous fuzzy model,
-    intending to have a finer grain of adjustment. Experiments show that
-    compared to a published control law, the proposed fuzzy controller has a
-    better performance when compared with the RMSE but also has limitations
-    with respect to undesired yaw oscillation. Nevertheless, the experiments
-    also highlight problems with the common practice of evaluating the
-    performance of fuzzy controllers with a single problem case and performance
-    metric, resulting in controllers that tend to be overtrained.}
+\abstract{ In this work we propose, through the use of a population-based
+metaheuristic, an optimization method that solves the problem of autonomous path
+tracking using a rear-wheel fuzzy logic controller. This approach enables the
+design of controllers using rules that are linguistically familiar to human
+users. Moreover, a new technique that uses three different paths to validate the
+performance of each candidate configuration is presented. We extend on our
+previous work by adding two more membership functions to the previous fuzzy
+model, intending to have a finer-grained adjustment. Experiments show that,
+compared to a published control law, % control law? - JJ
+the proposed fuzzy controller has a better RMSE-measured performance but also
+has limitations with respect to undesired yaw oscillation. Nevertheless, the
+experiments also highlight problems with the common practice of evaluating the
+performance of fuzzy controllers with a single problem case and performance
+metric, resulting in controllers that tend to be overtrained.}
 
 % Keywords
 \keyword{Fuzzy Systems; Fuzzy Control; Bioinspired Algorithms.} 
@@ -95,13 +94,13 @@ Contrary to boolean logic, in which an element is a member of a set or is not,
 now elements have a degree of membership to many sets. Fuzzy logic uses
 so-called membership functions (MFs) to assign a numerical value to each set
 member, indicating their degree of membership. MFs must be defined for each
-linguistic variable, then these variables can be used in a rule-based system to
+linguistic variable; these variables can be used in a rule-based system to
 express knowledge in a way similar to natural language, for instance, the rule
-if distance is near, uses the linguistic variable distance, with a fuzzy MF
+``if distance is near'' uses the linguistic variable distance, with a fuzzy MF
 assigning a degree of membership to the set near to each element of the
-distance domain, for instance for 2mm and 50mm the function will assign the
-following degrees of membership: near(2)=.92 and near(50)=.40. These rule base
-systems can express complex relationships well suited for control applications.  
+distance domain; for instance, for 2mm and 50mm the function will assign the
+following degrees of membership: near(2)=.92 and near(50)=.40. These rule based
+systems can express complex relationships well suited for control applications.
 
 That is why, since the earlier years of fuzzy logic theory, fuzzy inference
 systems \cite{driankov_introduction_2013} have been applied to control problems
@@ -121,7 +120,7 @@ on the parameters of the fuzzy system used. Moreover, the option of making a
 manual selection of these parameters is difficult because the search space is
 of considerable size and requires the validation of establishing the
 controller's performance by running time-consuming simulations.  Evolutionary
-algorithms (EAs) and other metaheuristics are often employed in tuning FISs
+algorithms (EAs) and other metaheuristics are often employed in tuning FISs % Define this. Is it Fuzzy inference systems? - JJ
 \cite{martinez-soto_bio-inspired_2012}. 
 
 EAs are a kind of optimization metaheuristic used for solving complex
@@ -144,7 +143,8 @@ Many papers address the problem of path tracking control with fuzzy logic, the
 earlier works used simple fuzzy rules to make adjustments to linear controllers
 \cite{lee_practical_2003}, or integrated fuzzy logic to a complex adaptive
 controller \cite{sanchez1997adaptive}. Meng \cite{bi_control_2020} proposes a
-Fuzzy PID algorithm to a two-degree-of-freedom arm robot. Antonin et al.
+Fuzzy PID % Explain acronym too - JJ
+algorithm to a two-degree-of-freedom arm robot. Antonin et al.
 \cite{antonelli_fuzzy-logic-based_2007} propose a set of rules to emulate the
 way humans drive, using as inputs of curve and distance to the system.  We have
 also reviewed works where authors use controllers for the follow-up and
@@ -162,7 +162,7 @@ permitted levels of the control signal.
 We have found in the literature various studies that optimize the parameters of
 a fuzzy controller applied to mobile autonomous robots using different
 bio-inspired metaheuristics
-\cite{hernandez_optimization_2019,lagunes_methodology_2017}.  Wagner \& Hagras
+\cite{hernandez_optimization_2019,lagunes_methodology_2017}.  Wagner and Hagras
 \cite{wagner2007genetic} propose a GA to evolve the architecture of a type-2
 fuzzy controller in robot navigation for real environments; they optimize the
 standard deviation of Gaussian type-2 MFs.  Again a GA is presented by Wu \&
@@ -193,7 +193,7 @@ m <b$ as
 \end{equation}
 
 each value is optimized independently, sometimes validating only the
-restriction $a < m <b$. In this work, we propose a method to include further
+restriction $a < m <b$. In this work, we propose a method that adds further
 restrictions, including symmetric definition and limiting the range of values
 of each parameter. In our previous work, we compared symmetrical and
 asymmetrical definitions and found that symmetrical restrictions give better
@@ -206,7 +206,7 @@ fuzzy logic. This approach enables the design of controllers using rules that
 are linguistically familiar to human users.
 
 Therefore, following the preliminary work in
-\cite{mancilla2022tracking,Mancilla2021}, in this paper, we propose the
+\cite{mancilla2022tracking,Mancilla2021}, in this paper we propose the
 addition of a more granular definition of fuzzy variables by including two more
 membership functions. Also, we propose a new parametrization technique that
 enables the definition of symmetric MFs, by using an aperture factor instead of
