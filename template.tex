@@ -285,7 +285,7 @@ and we can simplify the heading dynamics to
         and actuator variables for the rear-wheel-based control. The magnitude
         of $e$ illustrated in red, is the error measured from the rear wheel to
         the nearest point on the path. When e > 0, the wheel is at the right of
-        the path, and when e < 0 is at the left. $teta_e$ is the
+        the path, and when e < 0 is at the left. $\theta_e$ is the
         difference between the tangent at the nearest point in the path and the
         the heading $\theta$. The output of the controller is the heading rate
         $\omega$, from which we calculate the steering angle $\delta$ of the front wheel.
@@ -351,9 +351,9 @@ $\theta_e$ defined between the heading vector and the tangent vector of the
 route. This angle can also be negative or positive depending on the vehicle's
 position concerning the route; the controller output is the heading rate
 $\omega$, which allows us to calculate the steering angle $\delta$. The target
-velocity of the robot will be constant constat, so we will not control the
+velocity of the robot will be constant, so we will not control the
 velocity $v$ using the fuzzy controller we will use the following simple
-proportional controller instead     
+proportional controller instead
 
 \begin{equation}
     a = K_p(v_{ref}-v_r).
