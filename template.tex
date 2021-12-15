@@ -30,7 +30,7 @@
 \Title{Optimal Fuzzy Controller Design for Autonomous Robot Path Tracking using Genetic Algorithms}
 
 % MDPI internal command: Title for citation in the left column
-\TitleCitation{Title}
+\TitleCitation{Optimal Fuzzy Controller Design for Autonomous Robot Path Tracking using Genetic Algorithms}
 
 % Author Orchid ID: enter ID or remove command
 \newcommand{\orcidauthorA}{0000-0003-0430-8152} % Add \orcidA{} behind the author's name
@@ -120,8 +120,9 @@ on the parameters of the fuzzy system used. Moreover, the option of making a
 manual selection of these parameters is difficult because the search space is
 of considerable size and requires the validation of establishing the
 controller's performance by running time-consuming simulations.  Evolutionary
-algorithms (EAs) and other metaheuristics are often employed in tuning FISs % Define this. Is it Fuzzy inference systems? - JJ
-\cite{martinez-soto_bio-inspired_2012, DBLP:conf/evoW/SalemMGG18}.
+Algorithms (EAs) and other metaheuristics are often employed in tuning 
+Fuzzy Inference Systems (FISs) % Define this. Is it Fuzzy inference systems? - JJ
+\cite{martinez-soto_bio-inspired_2012,DBLP:conf/evoW/SalemMGG18}.
 
 EAs are a population-based optimization metaheuristic that can be used, among
 other things, for solving complex
@@ -144,7 +145,7 @@ Many papers address the problem of path tracking control with fuzzy logic, the
 earlier works used simple fuzzy rules to make adjustments to linear controllers
 \cite{lee_practical_2003}, or integrated fuzzy logic to a complex adaptive
 controller \cite{sanchez1997adaptive}. Meng \cite{bi_control_2020} proposes a
-Fuzzy PID % Explain acronym too - JJ
+Fuzzy PID Controller % Explain acronym too - JJ
 algorithm to a two-degree-of-freedom arm robot. Antonin et al.
 \cite{antonelli_fuzzy-logic-based_2007} propose a set of rules to emulate the
 way humans drive, using as inputs of curve and distance to the system.  We have
@@ -855,13 +856,7 @@ motion of each of the controllers concerning the yaw of the ``M'' path. Here we
 can see the advantage of the control law. In this case, the 3MF controller has
 a very high oscillation, which is not desirable in this type of controller. The
 same is observed in the 5MF controller but to a lesser degree; this could be related to how
-these controllers evolved, giving only weight to $e$.  This is a crucial aspect
-to be considered in future work. % You need to insert it in that section - JJ
-We can consider including a damping module or
-an evaluation metric that negatively weights this kind of oscillation. We can
-even include a fuzzy variable to the controller; in comparison, the control law
-also uses the curvature of the path $\mathcal{K}(s)$ as a variable for
-determining $\omega$. % If this is future work, move it there - JJ
+these controllers evolved, giving only weight to $e$. 
 
 \end{paracol}
 \begin{figure}[h]
@@ -880,31 +875,54 @@ determining $\omega$. % If this is future work, move it there - JJ
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}\label{Discussion}
 
-The optimization of fuzzy controllers for real-world applications requires a
-broader perspective. % Broader than what? - JJ
-We need to treat the problem as a supervised learning
-task. The assessment of the quality of solutions needs to consider other metrics
-as part of the
-desired control properties. % such as ... - JJ
-In this work, experiments show that the overall
-result improved by adding a robust validation of candidate solutions. % as in
-                                % ... - JJ
-Moreover,
-adding more complexity to the knowledge base % Used for training? - JJ
-also improved the control in terms
-of RMSE, although needing more computational resources. % During training? - JJ
-Our literature review
-shows that using only the RMSE is a common practice but could not be enough for
-this type of application. % Probably redundant. In this section you need to
+In this paper, we have proposed a method using a GA metaheuristic for evolving
+fuzzy controllers by optimizing its membership function's parameters.  The
+fuzzy controller, aimed at autonomous path tracking, using rear-wheel feedback,
+was optimized by running simulations and measuring the RMSE of the distance
+between the robot's position and a reference path. We compared two controllers
+with distinct fuzzy inference systems, using three MFs for each variable and a
+second with five MFs. Adding more MFs and, consequently, more fuzzy rules added
+more complexity to the knowledge base, adding more granularity to the
+representation.  We have shown that this change improved the control in terms
+of RMSE, although needing more computational resources on the evolutionary
+phase. With additional experiments, we have shown that by adding additional
+simulations to establish the quality of candidate solutions, during the
+evolution, the generated controllers have better performance than those evolved
+with just one simulation.
+
+When comparing the controllers, we found that some solutions had undesired yaw
+oscillation while keeping a low RMSE; this is a crucial aspect to be considered
+in future work. We can consider including a damping module or an evaluation
+metric that negatively weights this kind of oscillation. We can even include a
+fuzzy variable to the controller; in comparison, the control law also uses the
+curvature of the path $\mathcal{K}(s)$ as a variable for determining $\omega$.
+Perhaps we need to treat the evolutionary optimization of fuzzy controllers as
+a supervised learning task. The assessment of the quality of solutions needs to
+consider other metrics as part of the desired control properties, such as
+oscillation, overshoot, and generalization capabilities.
+
+%The optimization of fuzzy controllers for real-world applications requires a
+%broader perspective, optimization needs to consider more variables 
+% paragraph (?4:_:\lam) (end)% Broader than what? - JJ
+  % If this is future work, move it there - JJ
+
+%Our literature review
+%shows that using only the RMSE is a common practice but could not be enough for
+%this type of application. % Probably redundant. In this section you need to
                           % discuss why using other metrics helped find a better
                           % solution - jj
 
 % This should be a bit more precise and address the possible
 % shortcomings. Making things in parallel need not make it faster - JJ
-Furthermore, because of the computational cost, we will propose  as future work
-a technique to execute these experiments in a distributed way. Later we could
-try other bio-inspired methods and compare the results. We could also add more
-membership functions and test other functions to improve the inference system.
+
+Furthermore, because of the high computational cost, as future work, we will
+propose a technique to execute these experiments in a distributed way, adding
+multiple populations such as the island-model, or a pool-based evolutionary
+approach, that could enhance the search, giving supralinear execution times.
+Later we could try other bio-inspired methods and compare the results. We could
+also add more membership functions and test other functions to improve the
+inference system.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\section{Conclusions}
 
