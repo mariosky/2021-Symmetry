@@ -226,7 +226,9 @@ search, because candidate solutions can represent all possible MFs. This
 also means that the search space is not reduced.   
 In this work, we propose a novel method that adds further restrictions,
 including a symmetric definition and limiting the range of values of each
-parameter. In our previous work \cite{mancilla2022tracking,Mancilla2021}, we
+parameter. To achieved that, we first designed the structure of a parametrizable 
+fuzzy controller, using five membership functions for each fuzzy input variable.
+In our previous work \cite{mancilla2022tracking,Mancilla2021}, we
 compared symmetrical and asymmetrical definitions and found that symmetrical
 restrictions give better results for rear-wheel-based controllers. We propose a
 new parametrization technique that enables the definition of symmetric MFs, by
@@ -250,11 +252,12 @@ moving away either to the left or right of the desired path. Furthermore, in
 the literature, we have not found applications of fuzzy systems to follow the
 trajectory of a route so that this research could solve similar problems.
 
-The main contribution of this work is to propose, through the use of 
-population-based metaheuristics, an optimization method to solve the problem of
-autonomous path tracking using a rear-wheel controller in the framework of
-fuzzy logic. This approach enables the design of controllers using rules that
-are linguistically familiar to human users.
+The main contribution of this work is to propose, through the use of
+population-based metaheuristics tied with a parametrizable fuzzy controllers,
+an optimization method to solve the problem of autonomous path tracking using a
+rear-wheel controller in the framework of fuzzy logic. This approach enables
+the design of controllers using rules that are linguistically familiar to human
+users.
 
 We structure this document as follows: in Section~\ref{MatAndMethods}, we
 present the proposed method, configurations, and we describe the experimental
@@ -275,7 +278,7 @@ research directions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Materials and Methods}\label{MatAndMethods}
 
-\subsection{Rear-Wheel Feedback and Kinematic Model}
+\subsection{Rear-Wheel Feedback and Kinematic Model}\label{sec:kinematic}
 
 In this work, we use a simplified model of a bicycle-type kinematic robot
 consisting of two wheels connected by a rigid link of size $l$ with
@@ -333,7 +336,7 @@ s(t) = \operatorname*{arg\,min}_{\gamma} \|(x_r(t),y_r(t)) - (x_{ref}(\gamma),y_
 
 and the tracking error vector is 
 
-\begin{equation}
+\begin{equation}\label{eq:tracking_error}
 d(t) = (x_r(t),y_r(t))-(x_{ref}(s(t)),y_{ref}(s(t)))
 \end{equation}
 
@@ -369,72 +372,35 @@ and $\dot(t)$
 
 %Based on this model we nowfollowing a trajectory specified using cubic splines is
 %described.
-\subsection{Fuzzy Controllers}%
+\subsection{Fuzzy Controller}%
     \label{sub:FuzzyControllers}
 
-To design a fuzzy controller from the model we just described, we must consider
-the magnitude of the scalar value $e$, the distance from the rear wheel to the
-route's closest point. This error is positive if it is on the right and
-negative on the left of the route. Another input variable is the angle
+To design a fuzzy controller for the model we just described, we must decide which 
+variables we are going to treat as fuzzy variables. 
+First, we must consider the error ($e$), defined as the distance from the rear wheel to the
+path's closest point. This error is positive if it is on the right and
+negative if on the left of the path. Another input variable is the angle
 $\theta_e$ defined between the heading vector and the tangent vector of the
 route. This angle can also be negative or positive depending on the vehicle's
 position concerning the route; the controller output is the heading rate
 $\omega$, which allows us to calculate the steering angle $\delta$. The target
-velocity of the robot will be constant, so we will not control the
-velocity $v$ using the fuzzy controller we will use the following simple
+velocity of the robot will be constant, so we will not control (or fuzzyfy) the
+velocity $v$ using the fuzzy controller. We will use the following simple
 proportional controller instead
 
 \begin{equation}
     a = K_p(v_{ref}-v_r).
 \end{equation}
 
-In this work, we will compare two fuzzy models, one with three MFs, which was
-proposed in our previous work \cite{Mancilla2021}, and a new model using five
-MFs. We describe both fuzzy systems next.
-
-\subsubsection{Fuzzy Model with Three Membership Functions}
-
-We now model the same input and output variables mentioned above as fuzzy
-variables using three membership functions. Each variable has the same fuzzy
-values: high negative ({\tt hi\_neg}), low ({ \tt  low } ), and high positive
-({ \tt hi\_pos}). Depending on the case, the sign indicates whether it is to
-the right or left of the path. We use trapezoidal functions for the ``high''
-fuzzy term (positive and negative) and a triangular function for the ``low''
-value.
-
-We consider a total membership in extreme values (depending on each variable's
-domain). Because of this, we ignore the trapezoidal parameters' values outside
-the value domain. In total, we could modify up to 33 parameters for all
-membership functions. We propose keeping the extreme parameters outside the
-domain and the central point of the triangular function fixed. The center of
-the triangular functions will always be at 0 since it is the minimum error
-possible.  We kept the fuzzy rules symmetrical, representing how a human driver
-would adjust the steering wheel when driving. The rules are presented in Table~\ref{tab:3mf}.
-We have nine rules, to establish a relation between all the
-possible inputs and output values.
-
-\begin{specialtable}[H]
-    %\small
-    \caption{Proposed fuzzy rules for the basic controller with three membership functions.}\label{tab:3mf}
-    \centering
-    \begin{tabular}{lllllll}
-    Rule 1: & If $\theta_e$ is & { \tt hi\_neg} & and $e$ is & {\tt low}     & then $\omega$  is & {\tt hi\_pos}     \\
-    Rule 2: & If $\theta_e$ is  & { \tt hi\_pos} & and $e$ is & {\tt low}     & then $\omega$ is & {\tt hi\_neg }    \\
-    Rule 3: & If $\theta_e$ is & { \tt  low }     & and $e$ is & {\tt low}     & then $\omega$ is &{\tt low}         \\
-    Rule 4: & If $\theta_e$ is & { \tt hi\_neg} & and $e$ is & {\tt hi\_neg} & then $\omega$ is &{\tt hi\_pos}     \\
-    Rule 5: & If $\theta_e$ is & { \tt hi\_pos} & and $e$ is & {\tt hi\_pos} & then $\omega$ is &{\tt hi\_neg }    \\
-    Rule 6: & If $\theta_e$ is & { \tt hi\_pos} & and $e$ is & {\tt hi\_neg} & then $\omega$ is &{\tt low   }      \\
-    Rule 7: & If $\theta_e$ is & { \tt hi\_neg} & and $e$ is & {\tt hi\_pos} & then $\omega$ is & {\tt low   }      \\
-    Rule 8: & If $\theta_e$ is & { \tt low }    & and $e$ is & {\tt hi\_pos} & then $\omega$ is & {\tt hi\_neg }    \\
-    Rule 9: & If $\theta_e$ is & { \tt low}     & and $e$ is & {\tt hi\_neg} & then $\omega$ is & {\tt hi\_pos }
-    \end{tabular}
- \end{specialtable}
-
-
-\subsubsection{Fuzzy Model with Five Membership Functions}
-
-We now add two more membership functions to the previous fuzzy model, intending
-to have a finer grain of adjustment. Adding more functions also adds more
+\subsubsection{Parametrizable Fuzzy Controller}
+In this section, we explain the proposed a parametrizable fuzzy controller,
+suitable to optimization using a bio-inspired metaheuristic. We must define 
+the structure of the fuzzy controller consisting of fuzzy rules and parametrizable 
+membership functions.
+Extending our previous work \cite{Mancilla2021}, in which we used three MFs for each 
+variable we now add two more 
+membership functions to the previous fuzzy model, with the intention
+of having a finer grain of control. Adding more MFs also adds more
 complexity to the rules, and now we have even more parameters to tune.  Instead
 of having just two values for each type of error { \tt hi } and {\tt low} we
 add a middle value, represented by the { \tt medium } membership function. The
@@ -472,74 +438,25 @@ simulations. The rules are presented in Table~\ref{tab:5mfRules}.
     Rule 23: & If $\theta_e$ is	& { \tt hi\_pos}  &	and $e$ is	& { \tt low}      &	then $\omega$ is & { \tt hi\_neg}  \\
     Rule 24: & If $\theta_e$ is	& { \tt hi\_pos}  &	and $e$ is	& { \tt med\_pos} &	then $\omega$ is & { \tt hi\_neg}  \\
     Rule 25: & If $\theta_e$ is	& { \tt hi\_pos}  &	and $e$ is	& { \tt hi\_pos}  &	then $\omega$ is & { \tt hi\_neg}    
-       
     \end{tabular}
  \end{specialtable}
 
-\subsection{Tuning of Parameters Using a Genetic Algorithm}%
+The other component of a fuzzy controller are MFs, these must be defined as a parametrizable structures, 
+suitable to be optimized using a metaheuristic. We describe this structures in the following section.
+
+\subsection{Parametrizable Membership Functions}%
     \label{sec:GA}
 
-As we mentioned earlier, the proposed fuzzy controllers we proposed in the
-previous Section~\ref{sub:FuzzyControllers} need to be tuned to give
-acceptable results on a simulation. In this section, we describe our proposed
-method for MFs parameter optimization. First, we need to establish which
-parameters we are going to keep fixed and which parameters we are going to
-tune. The following two sections explain the parameter selection and the
-overall technique. 
-
-\subsubsection{ Parameter Tuning for Three MFs configuration}
-
-In this configuration, we modified the input and output variables' parameters
-symmetrically, varying the minimum extremes of the trapezoidal functions 
-
-\begin{equation}\label{eq:trapezoidal}
-\mu_{trap}(x) = \max{ \left( \min{ \left( \frac{x-a}{b-a},1,\frac{d-x}{d-c} \right)}, 0 \right)}  
-\end{equation}
-
-where the trapezoidal begins to descend/ascend and the point where it reaches zero.
-
-We varied these parameters symmetrically $(a, b, d, e, g, h)$; in the case of
-the triangular function (\ref{eq:triangular}), the aperture we symmetrically
-optimized $(c, f, i)$ the parameters as shown in Table~\ref{tab:paramsTriang}.
-To keep the symmetry, we just repeat the same parameter value on both sides of
-a triangular function or on the values of the trapezoidal. Some values are used
-only to make the function broader or narrower at the bottom. In this case, we
-parameterize the controller with just nine variables, and these are the
-parameters that the GA will optimize. That we will explain in
-Section~\ref{sec:GA}.
-
-\begin{specialtable}[htbp]
-    \small
-    \caption{Nine parameter configuration for three MFs fuzzy controller.}\label{tab:paramsTriang}
-    \begin{tabular}{cccc}
-    \toprule
-    \textbf{Variable} & \textbf{Linguistic Value} & \textbf{MF}& \textbf{Parameters}  \\
-    \midrule
-    $\theta_e$ & high negative  & $\mu_{trap}$  & $[-100, -100, -a, -a+b]$     \\ 
-    $\theta_e$ & low            & $\mu_{tria}$  & $[-c, 0, c]$     \\ 
-    $\theta_e$ & high positive  & $\mu_{trap}$  & $[a+b, a, 100, 100]$     \\ 
-
-    \midrule
-    $error$ & high negative  & $\mu_{trap}$  & $[-100, -100, -d, -d+e]$     \\ 
-    $error$ & low            & $\mu_{tria}$  & $[-f, 0, f]$     \\ 
-    $error$ & high positive  & $\mu_{trap}$  & $[d+e, d, 100, 100]$     \\ 
-
-    \midrule
-    $omega$ & high negative  & $\mu_{trap}$  & $[-8, -8, -g, -g+h]$     \\ 
-    $omega$ & low            & $\mu_{tria}$  & $[-i, 0, i]$     \\ 
-    $omega$ & high positive  & $\mu_{trap}$  & $[g+h, g, 8, 8]$     \\ 
-    \bottomrule
-\end{tabular}
-\end{specialtable}.
-
-
-\subsubsection{ Parameter Tuning for Five MFs configuration}
-
-In a similar fashion as before, we need to define which parameters will be
-tuned for the five MFs controller. Again we keep the MFs symmetrical around
-zero. In this case, we just needed ten variables to parameterize the
-controller. To achieve this, we kept the parameters of $\omega$ fixed. The
-parameters are illustrated in Figure~\ref{tab:5mf}.
+In this section, we describe our proposed method for MFs parameter
+optimization. First, we need to establish which parameters of the MFs we are
+going to keep fixed and which parameters we are going to optimize. As general
+rule, we keep the MFs symmetrical around zero, this means that the middle point
+of the triangular MF for { \tt low} will be fixed at zero in all cases. We also
+kept the extreme values of {\tt high} trapezoidal MFs, fixed at 50 and 5,
+positive or negative depending on the side. We kept the parameters of $\omega$
+fixed, to limit the search space. The parameters are illustrated in
+Figure~\ref{tab:5mf}. In this case, we just needed ten variables to
+parameterize the controller.
 
 \begin{specialtable}[htbp]
     \small
@@ -571,19 +488,20 @@ parameters are illustrated in Figure~\ref{tab:5mf}.
 \end{tabular}
 \end{specialtable}
 
-\subsubsection{ Parameter Tuning for Three MFs configuration}
-
 Another essential aspect to consider when tuning the above parameters is the
 range of values that each parameter can have. Normally, we keep all the
 parameters in the same range when using a population-based metaheuristic. In
-our previous work, we compared two ranges of values for the first controller,
-with ranges $[0,1]$ and $[0,2]$. Our experiments showed better results with the
+our previous work \cite{Mancilla2021}, we compared two ranges  
+$[0,1]$ and $[0,2]$ our experiments showed better results with the
 narrower range, so we selected the same configuration for the three MFs
 controllers for this work. In this work, we propose a simple technique to
 change the tuning ranges for the MFs while keeping the adjustable parameters in
 the same range of values $[0,1]$. We define different ranges for the input
 variables and normalize the values before they are passed to the membership
-functions.  These values are shown in Table~\ref{tab:factor}.
+functions. We can treat this as an aperture factor, now each parameter of 
+a MF can have a distinct range, while keeping the parameters or be optimized 
+fixed on $[0,1]$. We defined from our experience tha range for each parameter, these 
+are shown in Table~\ref{tab:factor}.
 
 \begin{specialtable}[H] 
 \small
@@ -601,7 +519,52 @@ e & [0,1]			& j & [0, 1]\\
 \end{tabular}
 \end{specialtable}
 
-\subsubsection{Genetic Algorithm Optimization}\label{sec:GAO}
+\subsubsection{Optimization Problem Formulation}
+
+An optimization procedure is needed to tune the paremeters of the 
+membership functions in order to generate a fuzzy controller that maintains 
+a low positional error over a desired path. The optimization problem 
+can be defined as searching for the parameter vector $x^{mf}$ that defines the membership functions 
+which minimize  the error. This can be defined as: 
+
+\begin{equation}
+    \operatorname*{arg\,min}_{x^{mf}} \{ FC_{error}\}
+\end{equation}
+
+where the fitness function $FC_error$ is:
+
+\begin{equation}
+  FC_{error} = \sum_{k}^3 Simulation_{rmse}(FC(x^{mf}), s_k, t_{max}) 
+\end{equation}
+
+in which $k$ is the number of paths $s_k$. A simulation consists of runing a control problem as 
+defined in Section~\ref{sec:kinematic} in which the control is
+performed by the fuzzy controller $FC(x^{mf})$ with membership functions
+defined by $x^{mf}$. The constant $t_{max}$ is the number of cycles executed in one simulation.
+As described before, the controller objective is to minimize the tracking error, 
+to obtain the RMSE we can use the tracking error vector defined in Equation~\ref{eq:tracking_error}:
+
+\begin{equation}\label{eq:tracking_error}
+ rmse = \sqrt{\frac{\sum_{t=1}^{t_{max}} (x_r(t),y_r(t))-(x_{ref}(s_k(t)),y_{ref}(s_k(t)))^2}{t_{max}}}
+\end{equation}
+
+The vector $x^{mf}$ defines the paremeters of the membership functions defined in Table~\ref{tab:5mf} 
+and the knowledge base in Table~\ref{tab:5mfRules}: 
+
+\begin{equation}\label{eq:mfs}
+ x^{mf} = \{x_1^a, x_2^b, x_3^c, x_4^d, x_5^e, x_6^f, x_7^g, x_8^h, x_9^i, x_{10}^j\}
+\end{equation}
+
+The range of all parameters is between 1 and 0: 
+
+\begin{equation}\label{eq:mfs}
+  0 \leq x_i \leq 1
+\end{equation}
+
+
+\subsubsection{Metaheuristic Optimization}\label{sec:GAO}
+
+
 
 As a population-based metaheuristic, the GA needs to evaluate the fitness of
 each candidate solution (also called individuals) in its population. This
