@@ -202,6 +202,9 @@ controllers, the main works are reviewed by Castillo
 controller is to model the uncertainty of the sensor data or the fuzzy model
 itself.
 
+Following the preliminary work in
+\cite{mancilla2022tracking,Mancilla2021}, we now discuss the novelty and main
+concerns of this paper. 
 We have observed that most of these studies optimize the parameters of MFs
 directly. For instance, if we have a triangular function for a fuzzy set $A$,
 defined by a lower limit $a$, and upper limit of $b$ and a value $m$ where $a <
@@ -218,39 +221,40 @@ m <b$ as
 \end{equation}
 
 each value is optimized independently, sometimes validating only the
-restriction $a < m <b$. In this work, we propose a method that adds further
-restrictions, including symmetric definition and limiting the range of values
-of each parameter. In our previous work, we compared symmetrical and
-asymmetrical definitions and found that symmetrical restrictions give better
-results for rear-wheel-based controllers. 
+restriction $a < m <b$. This has the advantage of not limiting the 
+search, because candidate solutions can represent all possible MFs. This 
+also means that the search space is not reduced.   
+In this work, we propose a novel method that adds further restrictions,
+including a symmetric definition and limiting the range of values of each
+parameter. In our previous work \cite{mancilla2022tracking,Mancilla2021}, we
+compared symmetrical and asymmetrical definitions and found that symmetrical
+restrictions give better results for rear-wheel-based controllers. We propose a
+new parametrization technique that enables the definition of symmetric MFs, by
+using an aperture factor instead of the previous method that used a delta from
+a fixed point.  Moreover, in this work, we also propose a change on how
+candidate controllers are normally evaluated by other works in the literature,
+by using a single simulation and path as fitness function. As experiments show,
+in the case of rear-wheel path tracking, evaluating candidate solutions with
+three simulations using distinct paths, gives better results.  As experiments
+show, these additions greatly improve the controller's optimal design by
+significantly decreasing the tracking error (RMSE) compared to our previous
+work. Experimental results also show that this method reduces the risk of
+generating an over-trained controller with low error for a specific track but
+cannot function in other paths. 
+
+To demonstrate the application of the method, we report an experimental case
+study using a bicycle-like mobile robot with nonholonomic constraints.  In this
+work, we choose the problem of trajectory tracking since it has the
+particularity of being naturally symmetric since the error is measured by
+moving away either to the left or right of the desired path. Furthermore, in
+the literature, we have not found applications of fuzzy systems to follow the
+trajectory of a route so that this research could solve similar problems.
 
 The main contribution of this work is to propose, through the use of 
 population-based metaheuristics, an optimization method to solve the problem of
 autonomous path tracking using a rear-wheel controller in the framework of
 fuzzy logic. This approach enables the design of controllers using rules that
 are linguistically familiar to human users.
-
-Therefore, following the preliminary work in
-\cite{mancilla2022tracking,Mancilla2021}, in this paper we propose the
-addition of a more granular definition of fuzzy variables by including two more
-membership functions. Also, we propose a new parametrization technique that
-enables the definition of symmetric MFs, by using an aperture factor instead of
-the previous method that used a delta from a fixed point.  These additions
-greatly improve the controller's evolutionary design by significantly
-decreasing the tracking error (RMSE) compared to our previous work. We also
-propose a new evaluation method for establishing the fitness of candidate
-solutions by using three different trajectories in each simulation.
-Experimental results show that this method reduces the risk of generating an
-over-trained controller with low error for a specific track but cannot function
-in other paths. To demonstrate the application of the method, we report an
-experimental case study using a bicycle-like mobile robot with nonholonomic
-constraints. 
-
-In this work, we choose the problem of trajectory tracking since it has the
-particularity of being naturally symmetric since the error is measured by
-moving away either to the left or right of the desired path. Furthermore, in
-the literature, we have not found applications of fuzzy systems to follow the
-trajectory of a route so that this research could solve similar problems.
 
 We structure this document as follows: in Section~\ref{MatAndMethods}, we
 present the proposed method, configurations, and we describe the experimental
@@ -788,7 +792,41 @@ Route S & 0.521 & 0.162 & \textbf{0.008} \\
 \end{tabular}
 \end{specialtable}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=9 cm]{img/boxplot}
+\caption{
+For each individual in the population, a controller is created with the
+parameters, this controller is then tested by running one or more simulations.
+The RMSE of the tracking is considered as the fitness for that particular
+candidate solution. This process is repeated for each member of the
+population.
+}\label{fig:boxplot}
+\end{figure}
 
+
+\begin{specialtable}[H] 
+\small
+\centering
+\caption{Wilcoxon rank-sum test between algorithms, showing p-values for $H_1:A<B$}\label{tab:wilcoxon} 
+\begin{tabular}{ccccccc}
+\toprule 
+    & GA       & PSO      & AO       & GWO      & AOA      & HS       \\
+\midrule
+GA  &          & 1.00E+00 & 1.00E+00 & 1.00E+00 & 9.99E-01 & 9.99E-01 \\
+\midrule
+PSO & \textbf{6.44E-09} &          & \textbf{2.23E-03} & \textbf{3.80E-02} & 1.73E-01 & \textbf{9.54E-05} \\
+\midrule
+AO  & \textbf{1.20E-05} & 9.98E-01 &          & 9.22E-01 & 7.76E-01 & 1.33E-01 \\
+\midrule
+GWO & \textbf{1.19E-07} & 9.63E-01 & 7.96E-02 &          & 4.80E-01 & \textbf{1.31E-02} \\
+\midrule
+AOA & \textbf{1.02E-03} & 8.31E-01 & 2.28E-01 & 5.25E-01 &          & 1.10E-01 \\
+\midrule
+HS  & \textbf{1.24E-03} & 1.00E+00 & 8.70E-01 & 9.87E-01 & 8.92E-01 &          \\
+\bottomrule
+\end{tabular}
+\end{specialtable}
 
 When we observe the optimized MFs for both controllers, 3MF in
 Figure~\ref{fig:3mf} and 5MF in Figure~\ref{fig:5mf}, we can see that they are
