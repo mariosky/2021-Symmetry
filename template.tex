@@ -27,7 +27,7 @@
 \usepackage{subfigure}
 %=================================================================
 % Full title of the paper (Capitalized)
-\Title{Optimal Fuzzy Controller Design for Autonomous Robot Path Tracking using Genetic Algorithms}
+\Title{Optimal Fuzzy Controller Design for Autonomous Robot Path Tracking using Population-based Metaheuristics}
 
 % MDPI internal command: Title for citation in the left column
 \TitleCitation{Optimal Fuzzy Controller Design for Autonomous Robot Path Tracking using Genetic Algorithms}
@@ -66,17 +66,19 @@ $^{2}$ \quad University of Granada; jmerelo@ugr.es}
 
 % Abstract (Do not insert blank lines, i.e. \\)
 
-\abstract{ In this work we propose, through the use of a population-based
-metaheuristic, an optimization method that solves the problem of autonomous path
+\abstract{ In this work we propose, through the use of population-based
+metaheuristics, an optimization method that solves the problem of autonomous path
 tracking using a rear-wheel fuzzy logic controller. This approach enables the
 design of controllers using rules that are linguistically familiar to human
 users. Moreover, a new technique that uses three different paths to validate the
 performance of each candidate configuration is presented. We extend on our
 previous work by adding two more membership functions to the previous fuzzy
-model, intending to have a finer-grained adjustment. Experiments show that,
+model, intending to have a finer-grained adjustment. We tuned the controller 
+using several well-known metaheuristic methods, Genetic Algorithms (GA),
+Particle Swarm Optimization (PSO), Grey Wolf Optimizer (GWO), Harmony Search (HS), and the recent 
+Aquila Optimizer (AO) and Arithmetic Optimization Algorithms. Experiments show that,
 compared to a published control law, % control law? - JJ
-the proposed fuzzy controller has a better RMSE-measured performance but also
-has limitations with respect to undesired yaw oscillation. Nevertheless, the
+the proposed fuzzy controllers have better RMSE-measured performance. Nevertheless, the
 experiments also highlight problems with the common practice of evaluating the
 performance of fuzzy controllers with a single problem case and performance
 metric, resulting in controllers that tend to be overtrained.}
@@ -108,39 +110,6 @@ systems \cite{driankov_introduction_2013} have been applied to control problems
 in many research projects \cite{yang_improved_2003,driankov_fuzzy_2013} and
 commercial systems.
 
-An essential caveat of applying fuzzy control strategies to real-world problems
-is that we require the use of optimization or adaptive techniques to tune some
-aspects of the fuzzy inference system.  From the membership functions (MFs)
-that define the linguistic variables to the rule definition of the rule-based
-system, including the defuzzification method
-\cite{xia2019command,isaka1988design}. 
-
-Tuning is needed because the fuzzy controllers' performance is highly dependent
-on the parameters of the fuzzy system used. Moreover, the option of making a
-manual selection of these parameters is difficult because the search space is
-of considerable size and requires the validation of establishing the
-controller's performance by running time-consuming simulations.  Evolutionary
-Algorithms (EAs) and other metaheuristics are often employed in tuning 
-Fuzzy Inference Systems (FISs) % Define this. Is it Fuzzy inference systems? - JJ
-\cite{martinez-soto_bio-inspired_2012,DBLP:conf/evoW/SalemMGG18}.
-
-EAs are a population-based optimization metaheuristic that can be used, among
-other things, for solving complex
-combinatorial problems \cite{back1993overview} with applications in many
-engineering areas \cite{mateos_algoritmos_2004}.  One of the most common EAs
-are Genetic Algorithms (GAs) \cite{holland1992genetic} which use specific
-representation for the problems to solve, as well as some specific operators:
-surviving individuals reproduce through genetic crossover and mutation
-operators to generate offspring, and there is a replacement mechanism to select
-the most adapted offspring \cite{muelas_algoritmos_2009}. GAs work on a set of
-potential solutions called a population that is evolved for a certain number of
-generations until a suitable or optimal solution is found. Even if this
-combination of techniques is the basis of computational intelligence
-\cite{wan1970applying,engelbrecht2007computational}, and there are many
-contributions on the subject, there are still many application areas that have
-specific requirements and challenges that have not been addressed or considered
-by earlier works.
-
 Many papers address the problem of path tracking control with fuzzy logic, the
 earlier works used simple fuzzy rules to make adjustments to linear controllers
 \cite{lee_practical_2003}, or integrated fuzzy logic to a complex adaptive
@@ -161,6 +130,61 @@ problem for the robot (3, 0) based on its kinematic model and proposes a
 solution by designing a control strategy that mainly considers the maximum
 permitted levels of the control signal. 
 
+An essential caveat of applying fuzzy control strategies to real-world problems
+is that we require the use of optimization or adaptive techniques to tune some
+aspects of the fuzzy inference system.  From the membership functions (MFs)
+that define the linguistic variables, to the definition of a rule-based
+system, including a defuzzification method
+\cite{xia2019command,isaka1988design}. 
+
+Tuning is needed because the fuzzy controllers' performance is highly dependent
+on the parameters of the fuzzy system used. Moreover, the option of making a
+manual selection of these parameters is difficult because the search space is
+of considerable size and requires the validation of establishing the
+controller's performance by running time-consuming simulations.  Evolutionary
+Algorithms (EAs) and other population-based metaheuristics are often employed in tuning 
+Fuzzy Inference Systems (FISs) % Define this. Is it Fuzzy inference systems? - JJ
+\cite{martinez-soto_bio-inspired_2012,DBLP:conf/evoW/SalemMGG18}.
+
+Population-based metaheuristics, are stochastic techniques that search for
+optimal solutions by using two strategies: exploration and exploitation.
+Exploration searches the space globaly, avoiding to be traped in a local
+optima, while exploitation, searches locally for nearby promising solutions.
+Genetic Algorithms (GAs) are the canonical representatives of population-based
+metaheuristics \cite{holland1992genetic}.  GAs work on a set of potential
+solutions called a population that is evolved for a certain number of
+generations until a suitable or optimal solution is found
+\cite{muelas_algoritmos_2009}.  In each generation, potential solutions
+(individuals) are evaluated, and then surviving individuals reproduce through
+genetic crossover (exploration) and mutation operators (exploitation) to
+generate new offspring.  Finally, there is a replacement mechanism to select
+the most adapted offspring and used them to generate a new generation of the
+population.  Most population-based metaheuristics, create an initial set of
+random candidate solutions, then these are evaluated against a quality
+function, then taking the quality and the position or structure of each
+solution, a nature-inspired metaheuristic is applied to generate a new set of
+candidates.  These algorithms can be broadly grouped into evolutionary
+algorithms (EAs) \cite{back1996evolutionary} and swarm intelligence (SI)
+\cite{kennedy2006swarm}, as well as other categories; popular EAs are Genetic
+Algorithms (GAs) \cite{holland1992adaptation,eiben2003genetic}, Genetic
+Programming (GP) \cite{back1996evolutionary},and Differential Evolution (DE)
+\cite{karabouga2004simple}, while examples of (SI) \cite{kennedy2006swarm} are
+particle swarm optimization (PSO), \cite{clerc2010particle}, Grey Wolf
+Optimization (GWO) \cite{mirjalili2014grey} and Aquila Optimizer (AO)
+\cite{abualigah2021aquila}. Moreover, examples of other categories are the
+Harmony Search (HS) \cite{geem2001new} algorithm, that is inpired by how jazz
+musicians improvise when playing with others, and finally, the arithmetic
+optimization algorithm (AOA) \cite{abualigah2021arithmetic} inspired on the
+distribution behavior of the main arithmetic operators in mathematics.
+
+%potential solutions called a population that is evolved for a certain number of
+%generations until a suitable or optimal solution is found. Even if this
+%combination of techniques is the basis of computational intelligence
+%\cite{wan1970applying,engelbrecht2007computational}, and there are many
+%contributions on the subject, there are still many application areas that have
+%specific requirements and challenges that have not been addressed or considered
+%by earlier works.
+
 We have found in the literature various studies that optimize the parameters of
 a fuzzy controller applied to mobile autonomous robots using different
 bio-inspired metaheuristics
@@ -177,7 +201,6 @@ controllers, the main works are reviewed by Castillo
 \cite{castillo_review_2012}, and the main reason for using this type of
 controller is to model the uncertainty of the sensor data or the fuzzy model
 itself.
-
 
 We have observed that most of these studies optimize the parameters of MFs
 directly. For instance, if we have a triangular function for a fuzzy set $A$,
@@ -201,8 +224,8 @@ of each parameter. In our previous work, we compared symmetrical and
 asymmetrical definitions and found that symmetrical restrictions give better
 results for rear-wheel-based controllers. 
 
-The main contribution of this work is to propose, through the use of a
-population-based metaheuristic, an optimization method to solve the problem of
+The main contribution of this work is to propose, through the use of 
+population-based metaheuristics, an optimization method to solve the problem of
 autonomous path tracking using a rear-wheel controller in the framework of
 fuzzy logic. This approach enables the design of controllers using rules that
 are linguistically familiar to human users.
