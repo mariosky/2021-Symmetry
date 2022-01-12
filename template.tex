@@ -93,7 +93,7 @@ metric, resulting in controllers that tend to be overtrained.}
 Proposed by Lofti Zadeh \cite{goguen_zadeh_1973}, fuzzy logic introduces the
 concepts of fuzzy sets and fuzzy logic operators \cite{zadeh1996fuzzy}.
 Contrary to boolean logic, in which an element is a member of a set or is not,
-now elements have a degree of membership to many sets. Fuzzy logic uses
+in fuzzy logic, elements have a degree of membership to many sets. Fuzzy logic uses
 so-called membership functions (MFs) to assign a numerical value to each set
 member, indicating their degree of membership. MFs must be defined for each
 linguistic variable; these variables can be used in a rule-based system to
@@ -114,13 +114,13 @@ Many papers address the problem of path tracking control with fuzzy logic, the
 earlier works used simple fuzzy rules to make adjustments to linear controllers
 \cite{lee_practical_2003}, or integrated fuzzy logic to a complex adaptive
 controller \cite{sanchez1997adaptive}. Meng \cite{bi_control_2020} proposes a
-Fuzzy PID Controller % Explain acronym too - JJ
+Fuzzy PID (proportional–integral–derivative) Controller % Explain acronym too - JJ
 algorithm to a two-degree-of-freedom arm robot. Antonin et al.
 \cite{antonelli_fuzzy-logic-based_2007} propose a set of rules to emulate the
 way humans drive, using as inputs of curve and distance to the system.  We have
 also reviewed works where authors use controllers for the follow-up and
 planning of routes. For example, using a simplified kinematic model of the
-bicycle type using the control law for the navigation and follow-up of a route
+bicycle type using the control law for the navigation and follow-up of a path
 \cite{laumond_robot_1998}, in work presented by Beleño et al.
 \cite{beleno_planeacion_2014} they propose the planning and tracking of the
 trajectories of a land vehicle based on the steering control in a natural
@@ -163,7 +163,12 @@ population.  Most population-based metaheuristics, create an initial set of
 random candidate solutions, then these are evaluated against a quality
 function, then taking the quality and the position or structure of each
 solution, a nature-inspired metaheuristic is applied to generate a new set of
-candidates.  These algorithms can be broadly grouped into evolutionary
+candidates. 
+
+Population-based metaheuristics have been extensively used for structural
+optimization tasks \cite{perez2007particle,durgun2012structural,yildiz2012new,geem2005harmony}, 
+together with more traditional gradient-based algorithms. These nature-inspired inpired 
+metaheuristic can be broadly grouped into evolutionary
 algorithms (EAs) \cite{back1996evolutionary} and swarm intelligence (SI)
 \cite{kennedy2006swarm}, as well as other categories; popular EAs are Genetic
 Algorithms (GAs) \cite{holland1992adaptation,eiben2003genetic}, Genetic
@@ -241,7 +246,7 @@ three simulations using distinct paths, gives better results.  As experiments
 show, these additions greatly improve the controller's optimal design by
 significantly decreasing the tracking error (RMSE) compared to our previous
 work. Experimental results also show that this method reduces the risk of
-generating an over-trained controller with low error for a specific track but
+generating an over-trained controller with low error for a specific path but
 cannot function in other paths. 
 
 To demonstrate the application of the method, we report an experimental case
@@ -250,7 +255,7 @@ work, we choose the problem of trajectory tracking since it has the
 particularity of being naturally symmetric since the error is measured by
 moving away either to the left or right of the desired path. Furthermore, in
 the literature, we have not found applications of fuzzy systems to follow the
-trajectory of a route so that this research could solve similar problems.
+trajectory of a path so that this research could solve similar problems.
 
 The main contribution of this work is to propose, through the use of
 population-based metaheuristics tied with a parametrizable fuzzy controllers,
@@ -381,8 +386,8 @@ First, we must consider the error ($e$), defined as the distance from the rear w
 path's closest point. This error is positive if it is on the right and
 negative if on the left of the path. Another input variable is the angle
 $\theta_e$ defined between the heading vector and the tangent vector of the
-route. This angle can also be negative or positive depending on the vehicle's
-position concerning the route; the controller output is the heading rate
+path. This angle can also be negative or positive depending on the vehicle's
+position concerning the path; the controller output is the heading rate
 $\omega$, which allows us to calculate the steering angle $\delta$. The target
 velocity of the robot will be constant, so we will not control (or fuzzyfy) the
 velocity $v$ using the fuzzy controller. We will use the following simple
@@ -531,10 +536,10 @@ which minimize  the error. This can be defined as:
     \operatorname*{arg\,min}_{x^{mf}} \{ FC_{error}\}
 \end{equation}
 
-where the fitness function $FC_error$ is:
+where the fitness function $FC_error$ is the average RMSE of three simulations:
 
 \begin{equation}
-  FC_{error} = \sum_{k=1}^3 rmse(FC(x^{mf}), s_k, t_{max}) 
+  FC_{error} = \frac{1}{3} \sum_{k=1}^3 rmse(FC(x^{mf}), s_k, t_{max}) 
 \end{equation}
 
 in which $k$ is the number of paths $s_k$. A simulation consists of runing a control problem as 
@@ -570,7 +575,7 @@ process is illustrated in Figure~\ref{fig:ga}. Each candidate solution is
 represented by a vector $x^{mf}$, here implemented as a list of objects of type {
 \tt float }. To evaluate each solution, we need to generate an instance of the
 fuzzy controller. Once created, the fuzzy controller is passed as a
-parameter, together with the tracks the mobile robot will follow. The output of
+parameter, together with the paths the mobile robot will follow. The output of
 the simulations is the RMSE of the accumulated errors $e$ obtained during the
 simulations. We consider this measure as the fitness of the candidate solution.
 
@@ -589,22 +594,22 @@ population.
 In our previous work \cite{Mancilla2021} we used a GA to evolve the controllers 
 using a single path; we noticed that this could lead to over-training. Similar to what
 happens in supervised learning algorithms, the controller found by the GA could
-be specialized only to the track used for its evolution. We found that the
-controller with only three MFs could follow new unseen tracks, but this was not
+be specialized only to the path used for its evolution. We found that the
+controller with only three MFs could follow new unseen paths, but this was not
 the case for the five MFs controller. It is well known that in rule-based
 learning, adding more rules can harm the capacity to generalize to unseen
 problems \cite{tan2016introduction}. Noticing this, we added a list of three
-tracks to evaluate the fitness for the experiments, which is the average RMSE
-of the three simulations. We ran experiments with one and three tracks. We
-defined each track using cubic splines over a list of coordinates; this is a
-common approach in the literature \cite{zhang2013cubic}. The tracks and the
-parameters to define them are shown in Table~\ref{tab:routes}. The first track
+paths to evaluate the fitness for the experiments, which is the average RMSE
+of the three simulations. We ran experiments with one and three paths. We
+defined each path using cubic splines over a list of coordinates; this is a
+common approach in the literature \cite{zhang2013cubic}. The paths and the
+parameters to define them are shown in Table~\ref{tab:routes}. The first path
 was used on previous work and was taken from the library of
-\cite{sakai_pythonrobotics_2018}, this track starts with a very narrow curve to
+\cite{sakai_pythonrobotics_2018}, this path starts with a very narrow curve to
 the left that is difficult for controllers to follow, but it remains
-differentiable throughout the path, we call this track ``M''. The other tracks
+differentiable throughout the path, we call this path ``M''. The other paths
 are called ``A'' and ``S'' and have smoother curves, with long straight
-segments and different curvatures. All tracks have seven anchor points for the
+segments and different curvatures. All paths have seven anchor points for the
 cubic spline.
 
 \begin{specialtable}[H] 
@@ -649,33 +654,81 @@ additional cost of $\mathcal{O}(n)$, finally there are algorithms that order
 the population by fitness after every iteration, this adds a complexity of
 $\mathcal{O}(nlog{}n)$.
 
+
 \subsubsection{Experimental Setup} % (fold)
 \label{sub:setup}
 
-We implemented the algorithm in Python using the DEAP \cite{fortin_deap_2012}
-library for the GA implementation. We used the scikit-fuzzy
-\footnote{https://github.com/scikit-fuzzy/scikit-fuzzy} library to code the
-fuzzy inference  systems. Finally, we modified a fork of the PythonRobotics
-repository \cite{sakai_pythonrobotics_2018}, adding the odeint library from the
-SciPy package \footnote{https://github.com/scipy/scipy} to integrate the system
-of ordinary equations.
+In this section, we compare the parameter optimization procedure proposed in 
+the previous section, using the following algorithms:
 
-All experiments ran with the same parameters for the GA. The only obvious
-difference was the size of the chromosomes because this is the same as the
-number of parameters we need to optimize. As we mentioned earlier, we proposed
-two controllers, one with three membership functions; we are going to call this
-controller 3MF, and the other controller 5MF because it has five membership
-functions. For details on these controllers, see
-Section~\ref{sub:FuzzyControllers}.  After several preliminary experiments, we
-settled for a configuration with a population size of 50 with 20 generations.
-We used single-point crossover with $0.3$ probability.  We opted for tournament
-selection with a tournament size of three. For mutation, and because we are
-using continuous values, we selected a Gaussian mutation with $\mu=0.0$ and
-$\sigma=0.2$. Finally, the probability for each gene to be mutated was $0.2$.
-Each individual's fitness was the RMSE mentioned earlier, but to economize the
+\begin{enumerate}
+    \item Genetic Algorithm (GA) \cite{holland1992genetic} 
+    \item Particle Swarm Optimization (PSO) \cite{kennedy2006swarm} 
+    \item Aquila Optimization (AO) \cite{abualigah2021aquila} 
+    \item Grey Wolf Optimizer (GWO) \cite{mirjalili2014grey} 
+    \item Arithmetic Optimization Algorithm (AOA) \cite{abualigah2021arithmetic} 
+    \item Harmony Search (HS) \cite{geem2001new} 
+\end{enumerate}
+
+All algorithms have the same population size of 50, and the number of iterations 
+was set at 30, from this values, the total number of function evaluations is 1000. 
+The parameters of the comparative algorithms is shown in Table~\ref{tab:alg_params}.
+
+\begin{specialtable}[H] 
+\small
+\caption{Parameter values for the algorithms compared}\label{tab:alg_params}
+\begin{tabular}{lll}
+\toprule
+\textbf{Algorithm} & \textbf{Parameter}	& \textbf{Value}\\
+\midrule
+GA & Selection & Tournament Selection (k =3)  \\
+& Mutation  & Gaussian ($\mu=0.0$ and $\sigma=0.2$)  \\
+& Mutation probability  &  0.3 \\
+& Crossover  & One point crossover (probability = 0.7)   \\
+\midrule
+PSO & Topology & Fully connected  \\
+& Speed limit& Min=-0.25,Max=0.25   \\
+& Cognitive and Social constants & $C_1=2,C_2=2$   \\
+\midrule
+AO & $\alpha$ & 0.1  \\
+& $\delta$ & 0.1  \\
+\midrule
+GWO & Convergence parameter (a)& Linearly decreased from 2 to 0  \\
+\midrule
+AOA & $\alpha$ & 5  \\
+& $\mu$ & 0.5  \\
+\midrule
+HS & HMConsidering Rate (HMCR) & 0.95  \\
+& Pitch Adjusting Rate & 0.05  \\
+\bottomrule
+\end{tabular}
+\end{specialtable}
+
+%The population si
+%we implemented the algorithm in python using the deap \cite{fortin_deap_2012}
+%library for the ga implementation. we used the scikit-fuzzy
+%\footnote{https://github.com/scikit-fuzzy/scikit-fuzzy} library to code the
+%fuzzy inference  systems. finally, we modified a fork of the pythonrobotics
+%repository \cite{sakai_pythonrobotics_2018}, adding the odeint library from the
+%scipy package \footnote{https://github.com/scipy/scipy} to integrate the system
+%of ordinary equations.
+%all experiments ran with the same parameters for the ga. the only obvious
+%difference was the size of the chromosomes because this is the same as the
+%number of parameters we need to optimize. as we mentioned earlier, we proposed
+%two controllers, one with three membership functions; we are going to call this
+%controller 3mf, and the other controller 5mf because it has five membership
+%functions. for details on these controllers, see
+%section~\ref{sub:fuzzycontrollers}.  after several preliminary experiments, we
+%settled for a configuration with a population size of 50 with 20 generations.
+%We used single-point crossover with $0.3$ probability.  We opted for tournament
+%selection with a tournament size of three. For mutation, and because we are
+%using continuous values, we selected a Gaussian mutation with $\mu=0.0$ and
+%$\sigma=0.2$. Finally, the probability for each gene to be mutated was $0.2$.
+The fitness function returns the RMSE of the simulation as mentioned earlier,
+but to economize the
 computational resources, while the simulations were running, we interrupted
-those simulations where the robot was clearly out of the track or did not
-finish near the final point of the track. In these cases, we assigned a very
+those simulations where the robot was clearly out of the path or did not
+finish near the final point of the path. In these cases, we assigned a very
 low fitness (we want to minimize the error) of 5000 to the first case and 2000
 to the second.  
 
@@ -713,6 +766,9 @@ with 24 threads and 48 GB RAM with Ubuntu Linux 21.04, and Python 3.7.5 code.
 Code and data can be found in the following GitHub repository
 \url{https://github.com/mariosky/fuzzy-control}.
 
+We compared the algorithms using the mean, median and standard deviation of the RMSE 
+of 30 algorithm executions. Moreover, we performed a Wilcoxon rank-sum test between algorithms 
+for performance comparison. 
 
 % subsubsection (?4:_:\lGA)(?4:_:\l)(?4:_:\limplementation) (end)
 
@@ -720,75 +776,57 @@ Code and data can be found in the following GitHub repository
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}\label{Results}
 
-This section shows the results of running the GA optimization of parameters for
-the two controllers described in the previous sections. We have the 3MF and 5MF
-controllers by running the GA optimization 30 times, using the average of the
-three tracks to establish the fitness.  Moreover, we also ran a GA for both
-controllers using only the most challenging track (Track M) for the evaluation.
-The descriptive statistics of these results are shown in
-Table~\ref{tab:statistics}.  As expected, and because the optimization is
-non-deterministic, there are a few outliers at both extremes of the
-performance. However, the deviation is higher when using only one track for the
-GAs evaluation. Nevertheless, the 5MF controller has the lower RMSE in both
-experiments.  The problem we found and mentioned earlier is that the 5MF
-controller trained with a single track can not follow the path of the other
-tracks; this is not the case with the 3MF controller.  For this reason, we will
-only consider the controller optimized with three tracks for further
-comparison. In the last column, we have the average execution time in seconds,
-for as expected, evaluating with three tracks is more time-consuming. However,
-we can also observe that it takes more time to evolve the 5MF controller. 
+This section shows the results of running the optimization of parameters for
+the controller described in the previous sections, with the average RMSE of
+three paths to establish the fitness. The descriptive statistics of these
+results are shown in Table~\ref{tab:statistics}.  As expected, and because the
+optimization is non-deterministic, there are a few outliers at both extremes of
+the performance. In particular, outliers are presented on the GA algorithm with
+RMSE = 0.18205, and the AOA algorithm with RMSE = 0.7978. The PSO algorithm
+obtained the lower RMSE average (0.00546) and the best controller (0.00158) and
+AOA with median of (0.00523). 
 
 \begin{specialtable}[H] 
 \small
-\caption{Descriptive statistics for 30 executions of the GA with an evaluation
-    of one and three tracks.}\label{tab:statistics}
+\caption{Descriptive statistics (n=30) results for algorithms with an evaluation
+    with three paths.}\label{tab:statistics}
 \begin{tabular}{llllll}
 \toprule
-\textbf{Evaluation} & \textbf{Controller} & \textbf{Average }	& \textbf{Standard } &\textbf{Median}	& \textbf{Average Exec. }\\
-                    &                     & \textbf{RMSE}	& \textbf{ Deviation} &\textbf{}	& \textbf{Time (s)}\\
+\textbf{Algorithm} & \textbf{Average }	& \textbf{Standard } &\textbf{Median} & \textbf{Min} & \textbf{Max}\\
+                   & \textbf{RMSE}	    & \textbf{ Deviation}&                &              &            \\
 \midrule
-Three tracks & MF3 & 0.4321 & 0.071 & 0.4136 & 1283s \\
-Three tracks & MF5 & \textbf{0.0156} & 0.031 & 0.0091 & 2664s \\
-\midrule
-Single track & MF3 & 0.6831 & 0.1096 & 0.6866 & 533s \\
-Single track & MF5 & \textbf{0.0330} & 0.1030 & 0.0055 & 640s \\
+GA                  &  0.01564           & 0.03163              & 0.00918     &   0.00574    &  0.18205   \\
+PSO                 &  \textbf{0.00546}  & 0.00202              & 0.00536     &   \textbf{0.00158}    &  0.00102   \\
+AO                  &  0.00695           & 0.00210              & 0.00696     &   0.00355    &  0.01407   \\
+GWO                 &  0.00617           & \textbf{0.00170}     & 0.00643     &   0.00315    &  0.00849   \\
+AOA                 &  0.03413           & 0.14403              & \textbf{0.00198} & 0.00198 &  \textbf{0.79780}   \\
+HS                  &  0.00774           & 0.00273              & 0.00740     &   0.00320    &  0.01454   \\
 \bottomrule
 \end{tabular}
 \end{specialtable}
 
-We selected the best controllers found in the 30 experiments and compared them
-against a controller using the control law in Equation~\ref{eq:controller}.
-This results are presented in Table~\ref{tab:rmse}. Again the controller 5FM
-has the lower RMSE on all individual tracks. The 3MF controller has a similar
-RMSE when we compare it against the control law.
-
-\begin{specialtable}[H] 
-\small
-\caption{RMSE of the best controllers in all three tracks.}\label{tab:rmse}
-\begin{tabular}{llll}
-\toprule
-\textbf{Track}	& \textbf{Control } &\textbf{3MF}	& \textbf{5MF}\\
-	& \textbf{law} & & \\
-\midrule
-Route M & 2.003 & 0.820 & \textbf{0.003} \\
-Route A & 0.014 & 0.016 & \textbf{0.005} \\
-Route S & 0.521 & 0.162 & \textbf{0.008} \\
-\bottomrule
-\end{tabular}
-\end{specialtable}
+In Figure~\ref{fig:boxplot}, we can see that the GA algorithm has the worst median and overall results,
+while the rest algorithms obtained competitive results.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=9 cm]{img/boxplot}
 \caption{
-For each individual in the population, a controller is created with the
-parameters, this controller is then tested by running one or more simulations.
-The RMSE of the tracking is considered as the fitness for that particular
-candidate solution. This process is repeated for each member of the
-population.
+Boxplot showing the results of 30 experiments, with outliers filtered in order to 
+show the plot at a larger scale.
 }\label{fig:boxplot}
 \end{figure}
 
+Table~\ref{tab:wilcoxon} gives the results of the Wilcoxon rank-sum test with
+an alternative hypothesis $H_1$ comparing if the algorithm in each row has a
+lower median than the algorithm on each column with a significance level at
+$\alpha = 0.05$. Results with a p-value lower than 0.05 are shown in bold.
+Among the six algorithms, the PSO algorithm outperformed the GA, AO, GWO and HS
+algorithms. The GA algorithm was outperformed by all the algorithms. The AOA
+algorithm was not outperformed by any algorithm with enough statistical
+significance. The GWO algorithm beat the HS algorithm, making it the second
+best, in mumber of wins.  Nevertheless, in general, most algorithms (PSO, AO,
+AOA and GWO) achieved good results.
 
 \begin{specialtable}[H] 
 \small
@@ -813,20 +851,81 @@ HS  & \textbf{1.24E-03} & 1.00E+00 & 8.70E-01 & 9.87E-01 & 8.92E-01 &          \
 \end{tabular}
 \end{specialtable}
 
-When we observe the optimized MFs for both controllers, 3MF in
-Figure~\ref{fig:3mf} and 5MF in Figure~\ref{fig:5mf}, we can see that they are
+To present a qualitative comparasion, we selected two of the best controllers
+found in the 30 experiments,  one from the best algorithm (PSO) and the other
+from the worst (GA), and then compare them against the baseline, a controller
+using the control law in Equation~\ref{eq:controller}. This results are
+presented in Table~\ref{tab:rmse}. We can see that even the fuzzy controler
+optimized with the GA outperformed the control law in two paths. The results 
+of the PSO are highly competitive against the baseline.
+
+\begin{specialtable}[H] 
+\small
+\caption{RMSE of the best controllers in all three paths.}\label{tab:rmse}
+\begin{tabular}{llll}
+\toprule
+\textbf{Path}	& \textbf{Control } &\textbf{PSO}	& \textbf{GA}\\
+	& \textbf{law} & & \\
+\midrule
+Path M & 2.003 & \textbf{0.00217} & 0.00396 \\
+Path A & 0.014 & \textbf{0.00168} & 0.00575 \\
+Path S & 0.521 & \textbf{0.00195} & 0.00845 \\
+\bottomrule
+\end{tabular}
+\end{specialtable}
+
+When we observe the optimized MFs for both controllers, GA in
+Figure~\ref{fig:3mf} and PSO in Figure~\ref{fig:5mf}, we can see that they are
 similar on the \texttt{low} and \texttt{high} MFS, for both the $\theta_r$ and
-$e$, moreover, in each of them both variables are very similar. With only omega
-having very different parameters.  We can also see that the values of $\omega$
-remain fixed on 5MF, because we kept those parameters fixed.
+$e$. There is a noticeable difference however in the high negative and low
+negative MFs. in each of them both variables are very similar.  We can also see
+that the MFs of $\omega$ remain fixed on both, this is because we kept those
+parameters fixed. The best parameters found from all algorithms are shown in
+Table~\ref{tab:params}.
+
+\begin{specialtable}[H] 
+\small
+\caption{RMSE of the best controllers in all three paths.}\label{tab:params}
+\begin{tabular}{ll}
+\toprule
+\textbf{Algorithm}	& \textbf{Parameter Vector}\\ 
+\midrule
+GA & \\
+PSO & [0.78, 0.48, 0.43, 0.69, 0.88, 0.96, -0.13, 0.36, 0.60, 0.77]\\
+AO & [0.71, 0.41, 0.44, 0.22, 0.52, 0.61, 0.12, 0.36, 0.50, 0.18]\\
+GWO & [0.74, 0.46, 0.49, 0.59, 0.40, 0.40, 0.11, 0.36, 0.30, 0.53]\\
+AOA & [1.0, -0.36, 0.37, 0.83, -0.47, 1.0, 0.00, 0.27, 0.27, 0.92]\\
+HS & [0.96, 0.65, 0.55, 0.13, 0.62, 0.56, 0.12, 0.36, 0.96, 0.96]\\
+\bottomrule
+\end{tabular}
+\end{specialtable}
+
+We now show a plot of the paths and the robot's movement following the path.
+First, we have the path ``M'' (see Figure~\ref{fig:3RutasM}), in which all
+controllers have problems at the beginning with a curve that is very sharp to
+the left and then a sharp U-turn to go back to the start.  We can see that the
+Control law follows the path with less zig-zag than the GA and PSO controllers, that
+keep the tracking closer to the path but with noticeable zig-zagging.
+
+The plots in Figure~\ref{fig:3RutasA} show the ``A'' path. This time all
+controllers closely follow the path. Again controller GA has a noticeable
+zig-zagging but manages to have a lower RMSE than the Control law.
+
+The results of Figure~\ref{fig:3RutasS} highlight the overall behavior of the
+three controllers on path ``S''. The control law takes more time to reach the path when it
+deviates from the reference because it has smoother steering, but once it is
+over the path, $e$ does not increase.  That is by design because one of the
+conditions is that a small initial tracking error will remain small. On the
+other hand controller PSO, does not deviate much from the reference, and has a
+smoother control than the GA.
 
 \end{paracol}
 \begin{figure}[H]
     \widefigure
      \centering
-    \subfigure[Optimized membership functions for the 3MF fuzzy controller.]{\label{fig:3mf}\includegraphics[width=90mm]{img/3r3fmR.pdf}}
-    \subfigure[Optimized membership functions for the 5MF fuzzy controller.]{\label{fig:5mf}\includegraphics[width=90mm]{img/3r5fmR.pdf}}
-     \caption{GA optimized membership functions for both controllers.}
+    \subfigure[Optimized membership functions of the best controller optimized with the PSO algorithm.]{\label{fig:3mf}\includegraphics[width=90mm]{img/psoFIS.pdf}}
+    \subfigure[Optimized membership functions of the best controller optimized with the GA algorithm.]{\label{fig:5mf}\includegraphics[width=90mm]{img/3r5fmR.pdf}}
+     \caption{Optimized membership functions with PSO and GA algorithms, parameters are shown in Table~\ref{tab:params}.}
         \label{fig:MFs}
 \end{figure}
 \begin{paracol}{2}
@@ -834,20 +933,14 @@ remain fixed on 5MF, because we kept those parameters fixed.
 \switchcolumn
 
 
-We now show a plot of the tracks and the robot's movement following the track.
-First, we have the track ``M'' (see Figure~\ref{fig:3RutasM}), in which all
-controllers have problems at the beginning with a curve that is very sharp to
-the left and then a sharp U-turn to go back to the start.  We can see that the
-3MF controller follows the path with less zig-zag than controller 5MF, which
-keeps the tracking closer to the path but with noticeable zig-zagging.
 
 \end{paracol}
 \begin{figure}[H]
     \widefigure
      \centering
     \subfigure[Control law]{\label{fig:compM}\includegraphics[width=60mm]{img/M.pdf}}
-    \subfigure[3MF]{\label{fig:comp3MF}\includegraphics[width=60mm]{img/3r3fmM.pdf}}
-    \subfigure[5FM]{\label{fig:comp5FM}\includegraphics[width=60mm]{img/3r5fmM.pdf}}
+    \subfigure[PSO]{\label{fig:comp3MF}\includegraphics[width=60mm]{img/psoM.pdf}}
+    \subfigure[GA]{\label{fig:comp5FM}\includegraphics[width=60mm]{img/3r5fmM.pdf}}
      \caption{Plot for the best simulations on Track M.}
         \label{fig:3RutasM}
 \end{figure}
@@ -855,69 +948,14 @@ keeps the tracking closer to the path but with noticeable zig-zagging.
 \linenumbers
 \switchcolumn
 
-The plots in Figure~\ref{fig:3RutasA} show the ``A'' track. This time all
-controllers closely follow the path. Again controller 5MF has a noticeable
-zig-zagging but manages to have the lower RMSE of the three.
-
-\end{paracol}
-\begin{figure}[H]
-    \widefigure
-     \centering
-    \subfigure[Control law]{\label{fig:compA}\includegraphics[width=60mm]{img/A.pdf}}
-    \subfigure[3MF]{\label{fig:compA3MF}\includegraphics[width=60mm]{img/3r3fmA.pdf}}
-    \subfigure[5FM]{\label{fig:compA5FM}\includegraphics[width=60mm]{img/3r5fmA.pdf}}
-     \caption{Plot for the best simulations on Track A.}
-        \label{fig:3RutasA}
-\end{figure}
-\begin{paracol}{2}
-\linenumbers
-\switchcolumn
 
 
-The results of Figure~\ref{fig:3RutasS} highlight the overall behavior of the
-three controllers. The control law takes more time to reach the path when it
-deviates from the reference because it has smoother steering, but once it is
-over the track, $e$ does not increase.  That is by design because one of the
-conditions is that a small initial tracking error will remain small. On the
-other hand controller 3MF, does not deviate much from the reference, has a
-smoother control than the 5MF, but it has a higher RMSE.
-
-\end{paracol}
-\begin{figure}[H]
-    \widefigure
-     \centering
-    \subfigure[Control law]{\label{fig:compS}\includegraphics[width=60mm]{img/S.pdf}}
-    \subfigure[3MF]{\label{fig:compS3MF}\includegraphics[width=60mm]{img/3r3fmS.pdf}}
-    \subfigure[5FM]{\label{fig:compS5FM}\includegraphics[width=60mm]{img/3r5fmS.pdf}}
-     \caption{Plot for the best simulations on Track S}
-        \label{fig:3RutasS}
-\end{figure}
-\begin{paracol}{2}
-\linenumbers
-\switchcolumn
 
 
-Finally, in Figure~\ref{fig:yaw} we can have a better look at the steering
-motion of each of the controllers concerning the yaw of the ``M'' path. Here we
-can see the advantage of the control law. In this case, the 3MF controller has
-a very high oscillation, which is not desirable in this type of controller. The
-same is observed in the 5MF controller but to a lesser degree; this could be related to how
-these controllers evolved, giving only weight to $e$. 
 
-\end{paracol}
-\begin{figure}[h]
-    \widefigure
-     \centering
-    \subfigure[Yaw along the reference path $s(\gamma)$ in meters.]{\label{fig:yawR}\includegraphics[width=90mm]{img/yawR.pdf}}
-    \subfigure[Yaw of the control law as it was tracking the reference path, in seconds.]{\label{fig:yawL}\includegraphics[width=90mm]{img/yawL.pdf}}
-    \subfigure[Yaw of the 3MF controller. ]{\label{fig:yaw3}\includegraphics[width=90mm]{img/yaw3.pdf}}
-    \subfigure[Yaw of the 5MF controller.]{\label{fig:yaw5}\includegraphics[width=90mm]{img/yaw5.pdf}}
-     \caption{Comparison of the yaw (steering) for each of the controllers as it was tracking the reference path ``M'', in seconds.}
-        \label{fig:yaw}
-\end{figure}
-\begin{paracol}{2}
-\linenumbers
-\switchcolumn
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}\label{Discussion}
 
@@ -946,6 +984,35 @@ Perhaps we need to treat the evolutionary optimization of fuzzy controllers as
 a supervised learning task. The assessment of the quality of solutions needs to
 consider other metrics as part of the desired control properties, such as
 oscillation, overshoot, and generalization capabilities.
+
+\end{paracol}
+\begin{figure}[H]
+    \widefigure
+     \centering
+    \subfigure[Control law]{\label{fig:compA}\includegraphics[width=60mm]{img/A.pdf}}
+    \subfigure[PSO]{\label{fig:compA3MF}\includegraphics[width=60mm]{img/psoA.pdf}}
+    \subfigure[GA]{\label{fig:compA5FM}\includegraphics[width=60mm]{img/3r5fmA.pdf}}
+     \caption{Plot for the best simulations on Track A.}
+        \label{fig:3RutasA}
+\end{figure}
+\begin{paracol}{2}
+\linenumbers
+\switchcolumn
+
+\end{paracol}
+\begin{figure}[H]
+    \widefigure
+     \centering
+    \subfigure[Control law]{\label{fig:compA}\includegraphics[width=60mm]{img/A.pdf}}
+    \subfigure[PSO]{\label{fig:compA3MF}\includegraphics[width=60mm]{img/psoA.pdf}}
+    \subfigure[GA]{\label{fig:compA5FM}\includegraphics[width=60mm]{img/3r5fmA.pdf}}
+     \caption{Plot for the best simulations on Track A.}
+        \label{fig:3RutasA}
+\end{figure}
+\begin{paracol}{2}
+\linenumbers
+\switchcolumn
+
 
 %The optimization of fuzzy controllers for real-world applications requires a
 %broader perspective, optimization needs to consider more variables 
@@ -1051,4 +1118,5 @@ the manuscript.}
 \bibliography{tracking}
 
 \end{document}
+
 
