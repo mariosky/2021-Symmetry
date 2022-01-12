@@ -330,7 +330,7 @@ rear-wheel position as Figure \ref{fig:kinematics} illustrates.  The path
 described in \cite{samson1992path}, and the feedback is a function of the
 nearest point on the reference path given by 
 
-\begin{equation}
+\begin{equation}\label{eq:gamma}
 s(t) = \operatorname*{arg\,min}_{\gamma} \|(x_r(t),y_r(t)) - (x_{ref}(\gamma),y_{ref}(\gamma)) \|.
 \end{equation}
 
@@ -534,7 +534,7 @@ which minimize  the error. This can be defined as:
 where the fitness function $FC_error$ is:
 
 \begin{equation}
-  FC_{error} = \sum_{k}^3 Simulation_{rmse}(FC(x^{mf}), s_k, t_{max}) 
+  FC_{error} = \sum_{k=1}^3 rmse(FC(x^{mf}), s_k, t_{max}) 
 \end{equation}
 
 in which $k$ is the number of paths $s_k$. A simulation consists of runing a control problem as 
@@ -562,28 +562,23 @@ The range of all parameters is between 1 and 0:
 \end{equation}
 
 
-\subsubsection{Metaheuristic Optimization}\label{sec:GAO}
+\subsubsection{Metaheuristic Optimization Procedure}\label{sec:GAO}
 
-
-
-As a population-based metaheuristic, the GA needs to evaluate the fitness of
+In general, a population-based metaheuristic, needs to evaluate the fitness of
 each candidate solution (also called individuals) in its population. This
 process is illustrated in Figure~\ref{fig:ga}. Each candidate solution is
-represented by a chromosome, here implemented as a list of objects of type {
+represented by a vector $x^{mf}$, here implemented as a list of objects of type {
 \tt float }. To evaluate each solution, we need to generate an instance of the
-fuzzy controller. The membership functions are defined using the parameters
-included in the chromosome. Once created, the fuzzy controller is passed as a
+fuzzy controller. Once created, the fuzzy controller is passed as a
 parameter, together with the tracks the mobile robot will follow. The output of
-the simulations is the RMSE of the accumulated errors $e$  obtained during the
+the simulations is the RMSE of the accumulated errors $e$ obtained during the
 simulations. We consider this measure as the fitness of the candidate solution.
-The GA will not select the candidate solutions with the worst fitness for
-reproduction.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=9 cm]{img/ga}
 \caption{
-For each individual in the population, a controller is created with the
+For each candidate solution in the population, a controller is created with the
 parameters, this controller is then tested by running one or more simulations.
 The RMSE of the tracking is considered as the fitness for that particular
 candidate solution. This process is repeated for each member of the
@@ -591,9 +586,8 @@ population.
 }\label{fig:ga}
 \end{figure} 
 
-
-In our previous work \cite{Mancilla2021} we evolved the controllers with a
-single path; we noticed that this could lead to over-training. Similar to what
+In our previous work \cite{Mancilla2021} we used a GA to evolve the controllers 
+using a single path; we noticed that this could lead to over-training. Similar to what
 happens in supervised learning algorithms, the controller found by the GA could
 be specialized only to the track used for its evolution. We found that the
 controller with only three MFs could follow new unseen tracks, but this was not
@@ -626,6 +620,34 @@ cubic spline.
 \bottomrule
 \end{tabular}
 \end{specialtable}
+
+\subsubsection{Complexity of the Optimization Procedure}
+ 
+The computational complexity of the optimization procedure described earlier,
+depends mostly on the evaluation of the fitness function. In this case, is
+difficult to estimate the cost of each simulation step because it depends on an
+ordinary differential equation solver (ODEInt), in particular this is a
+multi-step solver (lsode) and the number of iterations changes depending on the
+initial conditions. Moreover, in order to calculate the current nearest point
+to the path as described in Equation~\ref{eq:gamma}, there is a local
+optimization procedure to find $\gamma$ to establish this nearest point
+$(x_ref(\gamma),y_ref(\gamma))$.j Nevertheless, we can consider the cost of the
+function evaluation as domain dependent and with a high order complexity of at
+least $\mathcal{n^3}$. Because of this, normally the number of function
+evaluations needed to find a solution considered when establishing the
+performance of a metaheuristic algorithm. 
+
+On the side of population-based algorithm, and in particular all the algorithms
+that we tested on this paper, follow the same procedure: randomly initialize
+the population, this has a $\mathcal{O}(n)$ complexity, with $n$ the population
+size (the number of candidate solutions).  After the evaluation, there is a
+step for updating the solution the complexity for this is normally
+$\mathcal{O}(m*n)+\mathcal{O}(m*n*l)$ $m$ is the number of iterations and $l$
+the number or parameters in the fitness function. Some algorithm add a step for
+keeping only the generated solutions if the new fitness is better, this has an
+additional cost of $\mathcal{O}(n)$, finally there are algorithms that order
+the population by fitness after every iteration, this adds a complexity of
+$\mathcal{O}(nlog{}n)$.
 
 \subsubsection{Experimental Setup} % (fold)
 \label{sub:setup}
